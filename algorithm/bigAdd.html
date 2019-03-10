@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Add Big Integer</title>
+</head>
+<body>
+<script>
+    function add(a, b) {
+        var sA = a.split('');
+        var sB = b.split('');
+        var sum = '', temp = 0;
+
+        while(sA.length || sB.length || temp) {
+            temp += ~~sA.pop() + ~~sB.pop();
+            sum = temp % 10 + sum;
+            temp = temp > 9;
+        }
+
+        return sum.replace(/^0/, '');
+    }
+
+    console.log(add('9', '1'));
+    console.log(add('99', '1'));
+</script>
+</body>
+</html>

@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>DRAG</title>
+    <style type="text/css">
+        #square{
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background: red;
+            cursor: move;
+        }
+    </style>
+</head>
+<body>
+<h2>页面内有一个正方形元素，实现对其拖拽和放下，需要考虑窗口的边界情况。</h2>
+<div id="square"></div>
+<script type="text/javascript" src="./../cross-browser/EventUtil.js"></script>
+<script type="text/javascript">
+    var sqr = document.getElementById("square");
+    var length = sqr.offsetWidth;
+    var diffX, diffY;
+    var dragStart = false, event;
+
+    EventUtil.addHandler(sqr, "mousedown", downHandler);      // sqr
+    EventUtil.addHandler(document, "mousemove", moveHandler); // document
+    EventUtil.addHandler(document, "mouseup", upHandler);     // document
+
+    function downHandler(oEvent) {
+        dragStart = true;
+        event = EventUtil.getEvent(oEvent);
+        diffX = event.clientX - sqr.offsetLeft;  // diffX
+        diffY = event.clientY - sqr.offsetTop;   // diffY
+    }
+
+    function moveHandler(oEvent) {
+        if(dragStart) {
+            event = EventUtil.getEvent(oEvent);
+            var left = event.clientX - diffX;
+            var top = event.clientY - diffY;
+
+            if (left < 0) { // horizon left overflow
+                left = 0;
+            } else if(left + length > window.innerWidth) { // horizon right overflow
+                left = window.innerWidth - length;
+            }
+
+            if(top < 0) { // vertical top overflow
+                top = 0;
+            } else if(top + length > window.innerHeight) { // vertical bottom overflow
+                top = window.innerHeight - length;
+            }
+
+            sqr.style.left = left + 'px';
+            sqr.style.top = top + 'px';
+        }
+    }
+
+    function upHandler() {
+        dragStart = false;
+        EventUtil.removeHandler(document, "mousemove", null);
+        EventUtil.removeHandler(document, "mouseup", null);
+    }
+
+</script>
+</body>
+</html>
